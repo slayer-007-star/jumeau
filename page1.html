@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Joyeux Anniversaire à Mon Jumeau</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@400;700&display=swap');
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f8fafc 0%, #e0c3fc 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Montserrat', Arial, sans-serif;
+        }
+        .container {
+            background: rgba(255,255,255,0.95);
+            border-radius: 32px;
+            box-shadow: 0 8px 40px 0 #b993d6, 0 0 0 8px #f8fafc inset;
+            padding: 48px 36px 36px 36px;
+            max-width: 420px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -80px; left: -80px;
+            width: 200px; height: 200px;
+            background: radial-gradient(circle, #b993d6 0%, #8ca6db 100%);
+            opacity: 0.18;
+            border-radius: 50%;
+            z-index: 0;
+        }
+        .container::after {
+            content: '';
+            position: absolute;
+            bottom: -60px; right: -60px;
+            width: 160px; height: 160px;
+            background: radial-gradient(circle, #f8fafc 0%, #e0c3fc 100%);
+            opacity: 0.22;
+            border-radius: 50%;
+            z-index: 0;
+        }
+        .couronne {
+            font-size: 3.2em;
+            margin-bottom: 0.2em;
+            animation: couronnePop 1.2s infinite alternate;
+            z-index: 1;
+            position: relative;
+        }
+        @keyframes couronnePop {
+            0% { transform: scale(1);}
+            100% { transform: scale(1.12);}
+        }
+        h1 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.6em;
+            color: #b993d6;
+            margin: 0.2em 0 0.1em 0;
+            text-shadow: 0 2px 12px #e0c3fc88;
+            z-index: 1;
+            position: relative;
+        }
+        h2 {
+            font-size: 1.3em;
+            color: #8ca6db;
+            margin-bottom: 1.2em;
+            font-weight: 400;
+            z-index: 1;
+            position: relative;
+        }
+        .message {
+            font-size: 1.15em;
+            color: #444;
+            margin-bottom: 2em;
+            z-index: 1;
+            position: relative;
+        }
+        .btn-surprise {
+            padding: 14px 36px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 24px;
+            background: linear-gradient(90deg, #b993d6 0%, #8ca6db 100%);
+            color: #fff;
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-weight: bold;
+            letter-spacing: 2px;
+            cursor: pointer;
+            box-shadow: 0 0 24px 2px #b993d6aa;
+            transition: background 0.2s, color 0.2s, transform 0.2s;
+            z-index: 1;
+            position: relative;
+        }
+        .btn-surprise:hover {
+            background: linear-gradient(90deg, #8ca6db 0%, #b993d6 100%);
+            color: #fff;
+            transform: scale(1.07) rotate(-2deg);
+        }
+        .confetti {
+            pointer-events: none;
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 10;
+        }
+        .citation {
+            font-style: italic;
+            color: #b993d6;
+            margin-top: 2em;
+            font-size: 1.1em;
+            z-index: 1;
+            position: relative;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 24px 8vw 24px 8vw;
+                max-width: 98vw;
+            }
+            h1 { font-size: 2em; }
+        }
+    </style>
+</head>
+<body>
+    <canvas class="confetti"></canvas>
+    <div class="container">
+        <div class="couronne">👑</div>
+        <h1>Joyeux Anniversaire<br>à mon Jumeau !</h1>
+        <h2>Un jour unique pour une personne unique</h2>
+        <div class="message">
+            Aujourd'hui, c'est notre fête, mais c'est surtout la tienne !<br>
+            Merci d'être ce jumeau exceptionnel, complice de tous les instants, et ami pour la vie.<br>
+            Que cette année t'apporte tout ce que tu désires, et bien plus encore.<br>
+            <b>Que la magie de ce jour te suive toute l'année !</b>
+        </div>
+        <button class="btn-surprise" onclick="lancerSurprise()">Clique pour ta surprise ! 🎉</button>
+        <div class="citation" id="citation" style="display:none;">
+            "Les jumeaux, c'est deux fois plus de rires, deux fois plus de souvenirs, et un amour qui ne s'éteint jamais."
+        </div>
+    </div>
+    <audio id="musiqueAnniv" src="https://cdn.pixabay.com/audio/2022/10/16/audio_12b5b6c5b3.mp3"></audio>
+    <script>
+        // Confetti animation
+        const canvas = document.querySelector('.confetti');
+        const ctx = canvas.getContext('2d');
+        let W = window.innerWidth, H = window.innerHeight;
+        canvas.width = W; canvas.height = H;
+        let confettis = [];
+        for(let i=0;i<140;i++){
+            confettis.push({
+                x: Math.random()*W,
+                y: Math.random()*H,
+                r: Math.random()*8+4,
+                d: Math.random()*140,
+                color: `hsl(${Math.random()*360},100%,70%)`,
+                tilt: Math.random()*20-10,
+                tiltAngle: 0,
+                tiltAngleIncremental: (Math.random()*0.07)+.05
+            });
+        }
+        function drawConfetti(){
+            ctx.clearRect(0,0,W,H);
+            confettis.forEach(c=>{
+                ctx.beginPath();
+                ctx.lineWidth = c.r;
+                ctx.strokeStyle = c.color;
+                ctx.moveTo(c.x + c.tilt + c.r/3, c.y);
+                ctx.lineTo(c.x + c.tilt, c.y + c.tilt + c.r/3);
+                ctx.stroke();
+            });
+            updateConfetti();
+        }
+        function updateConfetti(){
+            confettis.forEach(c=>{
+                c.y += Math.cos(c.d) + 1 + c.r/2;
+                c.x += Math.sin(0.01 * c.d);
+                c.tiltAngle += c.tiltAngleIncremental;
+                c.tilt = Math.sin(c.tiltAngle - (c.d/3)) * 15;
+                if(c.y > H){
+                    c.x = Math.random()*W;
+                    c.y = -10;
+                }
+            });
+        }
+        setInterval(drawConfetti, 20);
+        window.addEventListener('resize', ()=>{
+            W = window.innerWidth; H = window.innerHeight;
+            canvas.width = W; canvas.height = H;
+        });
+
+        // Surprise button
+        function lancerSurprise() {
+            document.getElementById('musiqueAnniv').play();
+            document.querySelector('.btn-surprise').disabled = true;
+            document.querySelector('.btn-surprise').innerText = "Profite de ta journée ! 🎂";
+            document.getElementById('citation').style.display = 'block';
+            setTimeout(()=>{
+                alert("Joyeux anniversaire à nous deux ! Que cette journée soit inoubliable, mon jumeau !");
+            }, 1800);
+        }
+    </script>
+</body>
+</html>
